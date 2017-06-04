@@ -17,7 +17,7 @@ public class AddressEntity implements Serializable {
 
     @Id
     @Column(name="ID", nullable=false)
-    @SequenceGenerator(name="seq_address", sequenceName="seq_address_id")
+    @SequenceGenerator(name="seq_address", sequenceName="seq_address_id", allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="seq_address")
     private Long id;
 
@@ -39,10 +39,6 @@ public class AddressEntity implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCountry() {

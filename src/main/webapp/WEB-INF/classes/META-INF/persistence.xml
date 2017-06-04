@@ -5,15 +5,18 @@
         version="2.0">
 	<persistence-unit name="myOracle" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:jboss/datasources/OracleDS</jta-data-source>
 		<class>bg.tu.masters.entity.AddressEntity</class>
+		<class>bg.tu.masters.entity.AccountEntity</class>
+        <class>bg.tu.masters.entity.AuthorizationEntity</class>
+        <class>bg.tu.masters.entity.AuthorizationRequestEntity</class>
+        <class>bg.tu.masters.entity.BalanceEntity</class>
+        <class>bg.tu.masters.entity.CardEntity</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
-			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver" />
-			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
-			<property name="hibernate.connection.username" value="system" />
-			<property name="hibernate.connection.password" value="system" />
 			<property name="hibernate.show_sql" value="true"/>
 			<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
 		</properties>
 	</persistence-unit>
 </persistence>

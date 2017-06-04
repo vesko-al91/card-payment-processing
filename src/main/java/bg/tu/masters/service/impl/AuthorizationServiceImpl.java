@@ -1,32 +1,51 @@
 package bg.tu.masters.service.impl;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import bg.tu.masters.entity.AddressEntity;
+import bg.tu.masters.entity.AuthorizationRequestEntity;
+import bg.tu.masters.enums.AuthorizationRequestStatus;
+import bg.tu.masters.exception.ValidationException;
+import bg.tu.masters.manager.AuthorizationManager;
+import bg.tu.masters.manager.AuthorizationProcessResult;
+import bg.tu.masters.registry.AuthorizationRequestRegistry;
+import bg.tu.masters.request.AuthorizationRequest;
+import bg.tu.masters.response.AuthorizationResponse;
 import bg.tu.masters.service.AuthorizationService;
+import bg.tu.masters.validate.AuthorizationRequestValidator;
 
 @Stateless
 public class AuthorizationServiceImpl implements AuthorizationService {
 
+    @EJB
+    AuthorizationRequestRegistry authRequestRegistry;
+
+    @EJB
+    AuthorizationRequestValidator authRequestValidator;
+
+    @EJB
+    AuthorizationManager authorizationManager;
+
     @Override
-    public Response processAuthorizationRequest() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myOracle");
-        EntityManager em = emf.createEntityManager();
+    public AuthorizationResponse processAuthorizationRequest(AuthorizationRequest request) {
+        AuthorizationResponse response = null;
+        AuthorizationProcessResult processResult = null;
+        AuthorizationRequestEntity requestEntity = null;
 
-        AddressEntity address = new AddressEntity();
-        address.setAddress1("MyAddress 1");
-        address.setAddress2("MyAddress 2");
-        address.setCity("MyCity");
-        address.setCountry("MyCountry");
-        em.persist(address);
-        em.flush();
+        try {
+            requestEntity = authRequestRegistry.storeAuthorizationRequest(request);
+            authRequestValidator.validate(request);
+            processResult = authorizationManager.processAuthorizationRequest(requestEntity);
+            response = new AuthorizationResponse(processResult.getStatus());
+        } catch (ValidationException e) {
+            System.out.println("--------- Validation exception occured: " + e.getField() + " " + e.getComment());
+            response = new AuthorizationResponse(AuthorizationRequestStatus.ERROR);
+        } finally {
+            authRequestRegistry.updateAuthorizationRequest(requestEntity, processResult);
+        }
 
-        return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).build();
+        return response;
     }
 
 }
