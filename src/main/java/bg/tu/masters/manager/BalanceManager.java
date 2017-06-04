@@ -23,7 +23,12 @@ public class BalanceManager {
 
     public void checkAvailableBalance(Long accountId, BigDecimal trnAmount, String trnCurrency) throws BalanceNotEnoughException {
         String accountCurrency = accountManager.getAccountCurrency(accountId);
-        BigDecimal amount = currencyConversionManager.convert(trnAmount, trnCurrency, accountCurrency);
+        BigDecimal amount = null;
+        if (trnCurrency.equalsIgnoreCase(accountCurrency)) {
+            amount = trnAmount;
+        } else {
+            amount = currencyConversionManager.convert(trnAmount, trnCurrency, accountCurrency);
+        }
         BalanceEntity balance = balanceRegistry.loadBalance(accountId);
 
         if (balance == null || balance.getAvailableBalance().compareTo(amount) < 0) {

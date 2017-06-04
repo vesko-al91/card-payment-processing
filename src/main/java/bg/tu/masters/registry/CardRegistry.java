@@ -19,7 +19,7 @@ public class CardRegistry {
         try {
             Query query = em.createNamedQuery(CardEntity.FIND_CARD_BY_CARD_REF);
             query.setParameter("cardRef", cardRef);
-            query.getSingleResult();
+            cardEntity = (CardEntity) query.getSingleResult();
         } catch(Exception e) {
             e.printStackTrace();
         }

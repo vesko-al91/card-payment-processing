@@ -11,14 +11,17 @@ public class CurrencyConversionManager {
 
     public BigDecimal convert(BigDecimal amount, String fromCurrency, String toCurrency) {
         Map<String, BigDecimal> bgnRates = new HashMap<String, BigDecimal>();
-        bgnRates.put("EUR", new BigDecimal("1.95900"));
-        bgnRates.put("GBP", new BigDecimal("2.25570"));
+        bgnRates.put("BGN", BigDecimal.ONE);
+        bgnRates.put("EUR", new BigDecimal("0.50854"));
+        bgnRates.put("GBP", new BigDecimal("0.44608"));
         Map<String, BigDecimal> eurRates = new HashMap<String, BigDecimal>();
-        bgnRates.put("BGN", new BigDecimal("0.50831"));
-        bgnRates.put("GBP", new BigDecimal("0.87523"));
+        eurRates.put("EUR", BigDecimal.ONE);
+        eurRates.put("BGN", new BigDecimal("1.96642"));
+        eurRates.put("GBP", new BigDecimal("0.87728"));
         Map<String, BigDecimal> gbpRates = new HashMap<String, BigDecimal>();
-        bgnRates.put("EUR", new BigDecimal("1.14255"));
-        bgnRates.put("BGN", new BigDecimal("2.24543"));
+        gbpRates.put("GBP", BigDecimal.ONE);
+        gbpRates.put("EUR", new BigDecimal("1.13988"));
+        gbpRates.put("BGN", new BigDecimal("2.24149"));
 
         Map<String, Map<String, BigDecimal>> fxRates = new HashMap<String, Map<String, BigDecimal>>();
         fxRates.put("BGN", bgnRates);

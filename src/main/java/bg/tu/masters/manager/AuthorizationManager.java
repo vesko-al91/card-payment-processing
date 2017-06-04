@@ -58,15 +58,20 @@ public class AuthorizationManager {
         cardManager.isCardActive(cardRef);
         cardManager.isCardExpired(cardRef);
         cardManager.doesCardBelongToAccount(cardRef, accountId);
-        cardManager.isTransactionAllowedForCard(cardRef, request.getTrnType());
-        cardManager.checkSecurityCode(cardRef, request.getSecurityCode(), Boolean.valueOf(request.getSecurityCode()));
+        cardManager.isTransactionAllowedForCard(cardRef, request.getTrnType(), request.getCardPresent(), request.getClientPresent());
+        cardManager.checkSecurityCode(cardRef, request.getSecurityCode(), request.getCardPresent());
     }
 
     private void createAuthorization(AuthorizationRequestEntity request) {
         Long accountId = Long.valueOf(request.getAccountId());
         String accountCurrency = accountManager.getAccountCurrency(accountId);
-        BigDecimal amount = currencyConversionManager.convert(new BigDecimal(request.getTrnAmount()),
-                request.getTrnCurrency(), accountCurrency);
+        BigDecimal amount = null;
+        if (accountCurrency.equalsIgnoreCase(request.getTrnCurrency())) {
+            amount = new BigDecimal(request.getTrnAmount());
+        } else {
+            amount = currencyConversionManager.convert(new BigDecimal(request.getTrnAmount()),
+                    request.getTrnCurrency(), accountCurrency);
+        }
 
         authorizationRegistry.createAuthorization(request, amount);
         balanceManager.reserveBalance(accountId, amount);

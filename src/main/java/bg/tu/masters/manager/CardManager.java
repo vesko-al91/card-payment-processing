@@ -41,21 +41,23 @@ public class CardManager {
         }
     }
 
-    public void isTransactionAllowedForCard(String cardRef, String trnType) throws TransactionNotAllowedToCardException {
+    public void isTransactionAllowedForCard(String cardRef, String trnType, String cardPresent, String clientPresent)
+            throws TransactionNotAllowedToCardException {
         CardEntity card = cardRegistry.loadCard(cardRef);
         if (card == null ||
-                (CardType.VIRTUAL.equals(card.getType()) && TransactionType.ATM.name().equals(trnType))) {
+                (CardType.VIRTUAL.equals(card.getType()) && TransactionType.ATM.name().equals(trnType)) ||
+                (TransactionType.ATM.name().equals(trnType) && !("1".equals(cardPresent) && "1".equals(clientPresent)))) {
             throw new TransactionNotAllowedToCardException();
         }
     }
 
-    public void checkSecurityCode(String cardRef, String code, Boolean cardPresent) throws SecurityCodeMismatchException {
+    public void checkSecurityCode(String cardRef, String code, String cardPresent) throws SecurityCodeMismatchException {
         CardEntity card = cardRegistry.loadCard(cardRef);
         if (card == null) {
             throw new SecurityCodeMismatchException();
         }
-        String codeToMatch = cardPresent ? card.getPinCode() : card.getCvvCode();
-        if (!codeToMatch.equals(code)) {
+        String codeToMatch = "1".equals(cardPresent) ? card.getPinCode() : card.getCvvCode();
+        if (!codeToMatch.equalsIgnoreCase(code)) {
             throw new SecurityCodeMismatchException();
         }
     }

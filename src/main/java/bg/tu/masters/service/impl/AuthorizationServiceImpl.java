@@ -2,7 +2,6 @@ package bg.tu.masters.service.impl;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.Persistence;
 
 import bg.tu.masters.entity.AuthorizationRequestEntity;
 import bg.tu.masters.enums.AuthorizationRequestStatus;
