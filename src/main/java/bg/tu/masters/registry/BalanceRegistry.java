@@ -43,4 +43,32 @@ public class BalanceRegistry {
         }
     }
 
+    public void releaseBalance(Long accountId, BigDecimal amount) {
+        BalanceEntity balance = null;
+
+        try {
+            balance = loadBalance(accountId);
+            BigDecimal newAvailableBalance = balance.getAvailableBalance().add(amount);
+            balance.setAvailableBalance(newAvailableBalance);
+            em.merge(balance);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void withdraw(Long accountId, BigDecimal amount) {
+        BalanceEntity balance = null;
+
+        try {
+            balance = loadBalance(accountId);
+            BigDecimal newAvailableBalance = balance.getAvailableBalance().subtract(amount);
+            BigDecimal newTotalBalance = balance.getTotalBalance().subtract(amount);
+            balance.setAvailableBalance(newAvailableBalance);
+            balance.setTotalBalance(newTotalBalance);
+            em.merge(balance);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

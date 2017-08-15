@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,13 +25,21 @@ import bg.tu.masters.enums.AuthorizationStatus;
 
 @Entity
 @Table(name = "AUTHORIZATION")
+@NamedQueries({
+    @NamedQuery(
+            name = AuthorizationEntity.FIND_AUTH_BY_REQ_ID,
+            query = "SELECT a FROM AuthorizationEntity a WHERE a.request.id = :authReqId"
+    )
+})
 public class AuthorizationEntity implements Serializable {
     private static final long serialVersionUID = 550888551710252366L;
+
+    public static final String FIND_AUTH_BY_REQ_ID = "findAuthByReqId";
 
     @Id
     @Column(name="ID", nullable=false)
     @SequenceGenerator(name="seq_auth", sequenceName="seq_auth_id", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="seq_auth")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq_auth")
     private Long id;
 
     @OneToOne(cascade = {CascadeType.ALL})

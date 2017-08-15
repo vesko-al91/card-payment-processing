@@ -27,6 +27,7 @@
             </configuration>
         </plugin>
     </plugins>
+    <finalName>card-payment-processing</finalName>
 </build>
 
 <dependencies>

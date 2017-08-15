@@ -18,7 +18,7 @@ public class AddressEntity implements Serializable {
     @Id
     @Column(name="ID", nullable=false)
     @SequenceGenerator(name="seq_address", sequenceName="seq_address_id", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="seq_address")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq_address")
     private Long id;
 
     @Column(name = "COUNTRY")

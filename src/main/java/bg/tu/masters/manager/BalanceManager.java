@@ -40,4 +40,12 @@ public class BalanceManager {
         balanceRegistry.reserveBalance(accountId, amount);
     }
 
+    public void releaseBalance(Long accountId, BigDecimal amount) {
+        balanceRegistry.releaseBalance(accountId, amount);
+    }
+
+    public void withdraw(Long accountId, BigDecimal amount) {
+        balanceRegistry.withdraw(accountId, amount);
+    }
+
 }

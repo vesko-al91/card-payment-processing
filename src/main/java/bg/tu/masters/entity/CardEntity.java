@@ -1,7 +1,6 @@
 package bg.tu.masters.entity;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -20,7 +19,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import bg.tu.masters.enums.CardStatus;
 import bg.tu.masters.enums.CardType;
@@ -41,7 +39,7 @@ public class CardEntity implements Serializable {
     @Id
     @Column(name="ID", nullable=false)
     @SequenceGenerator(name="seq_card", sequenceName="seq_card_id", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="seq_card")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq_card")
     private Long id;
 
     @OneToOne(cascade = {CascadeType.ALL})
@@ -73,7 +71,7 @@ public class CardEntity implements Serializable {
     private Integer expiryMonth;
 
     @Column(name = "EXP_YEAR")
-    private Integer expiryYear;;
+    private Integer expiryYear;
 
     @Column(name = "CVV")
     private String cvvCode;
@@ -175,20 +173,6 @@ public class CardEntity implements Serializable {
 
     public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
-    }
-
-    @Transient
-    public Boolean isCardExpired() {
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1; // In Calendar months start from 0, not 1.
-
-        if ((currentYear > this.expiryYear) ||
-                (currentYear == this.expiryYear) && (currentMonth > this.expiryMonth)) {
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
     }
 
 }

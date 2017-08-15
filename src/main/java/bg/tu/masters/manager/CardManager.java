@@ -8,7 +8,6 @@ import bg.tu.masters.enums.CardStatus;
 import bg.tu.masters.enums.CardType;
 import bg.tu.masters.enums.TransactionType;
 import bg.tu.masters.exception.card.CardDoesNotBelongToAccountException;
-import bg.tu.masters.exception.card.CardExpiredException;
 import bg.tu.masters.exception.card.CardNotActiveException;
 import bg.tu.masters.exception.card.SecurityCodeMismatchException;
 import bg.tu.masters.exception.card.TransactionNotAllowedToCardException;
@@ -19,13 +18,6 @@ public class CardManager {
 
     @EJB
     private CardRegistry cardRegistry;
-
-    public void isCardExpired(String cardRef) throws CardExpiredException {
-        CardEntity card = cardRegistry.loadCard(cardRef);
-        if (card == null || card.isCardExpired()) {
-            throw new CardExpiredException();
-        }
-    }
 
     public void doesCardBelongToAccount(String cardRef, Long accountId) throws CardDoesNotBelongToAccountException {
         CardEntity card = cardRegistry.loadCard(cardRef);

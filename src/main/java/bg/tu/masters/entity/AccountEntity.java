@@ -24,7 +24,7 @@ public class AccountEntity implements Serializable {
     @Id
     @Column(name="ID", nullable=false)
     @SequenceGenerator(name="seq_account", sequenceName="seq_account_id", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="seq_account")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq_account")
     private Long id;
 
     @Column(name = "FIRST_NAME")

@@ -13,6 +13,9 @@ public class AuthorizationRequest {
     private String cardRef;
 
     @XmlElement
+    private String authRef;
+
+    @XmlElement
     private String accountId;
 
     @XmlElement
@@ -55,6 +58,10 @@ public class AuthorizationRequest {
 
     public String getCardRef() {
         return cardRef;
+    }
+
+    public String getAuthRef() {
+        return authRef;
     }
 
     public String getAccountId() {

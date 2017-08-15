@@ -44,7 +44,7 @@ public class AuthorizationManager {
             createAuthorization(request);
             return new AuthorizationProcessResult(AuthorizationRequestStatus.APPROVED, AuthorizationRequestCode.OK);
         } catch(Exception e) {
-            return exceptionHandler.handleException(e);
+            return exceptionHandler.handleAuthorizationException(e);
         }
     }
 
@@ -56,7 +56,6 @@ public class AuthorizationManager {
 
         balanceManager.checkAvailableBalance(accountId, new BigDecimal(request.getTrnAmount()), request.getTrnCurrency());
         cardManager.isCardActive(cardRef);
-        cardManager.isCardExpired(cardRef);
         cardManager.doesCardBelongToAccount(cardRef, accountId);
         cardManager.isTransactionAllowedForCard(cardRef, request.getTrnType(), request.getCardPresent(), request.getClientPresent());
         cardManager.checkSecurityCode(cardRef, request.getSecurityCode(), request.getCardPresent());
@@ -73,8 +72,8 @@ public class AuthorizationManager {
                     request.getTrnCurrency(), accountCurrency);
         }
 
-        authorizationRegistry.createAuthorization(request, amount);
         balanceManager.reserveBalance(accountId, amount);
+        authorizationRegistry.createAuthorization(request, amount);
     }
 
 }

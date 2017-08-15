@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -19,13 +21,21 @@ import bg.tu.masters.enums.AuthorizationRequestStatus;
 
 @Entity
 @Table(name = "AUTH_REQUEST")
+@NamedQueries({
+    @NamedQuery(
+            name = AuthorizationRequestEntity.FIND_REQ_BY_AUTH_REF,
+            query = "SELECT a FROM AuthorizationRequestEntity a WHERE a.authRef = :authRef"
+    )
+})
 public class AuthorizationRequestEntity implements Serializable {
     private static final long serialVersionUID = 5490511010729153131L;
+
+    public static final String FIND_REQ_BY_AUTH_REF = "findReqByAuthRef";
 
     @Id
     @Column(name="ID", nullable=false)
     @SequenceGenerator(name="seq_auth_req", sequenceName="seq_auth_req_id", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="seq_auth_req")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq_auth_req")
     private Long id;
 
     @Column(name = "TYPE")
@@ -33,6 +43,9 @@ public class AuthorizationRequestEntity implements Serializable {
 
     @Column(name = "CARD_REF")
     private String cardRef;
+
+    @Column(name = "AUTH_REF")
+    private String authRef;
 
     @Column(name = "ACCOUNT_ID")
     private String accountId;
@@ -100,6 +113,14 @@ public class AuthorizationRequestEntity implements Serializable {
 
     public void setCardRef(String cardRef) {
         this.cardRef = cardRef;
+    }
+
+    public String getAuthRef() {
+        return authRef;
+    }
+
+    public void setAuthRef(String authRef) {
+        this.authRef = authRef;
     }
 
     public String getAccountId() {

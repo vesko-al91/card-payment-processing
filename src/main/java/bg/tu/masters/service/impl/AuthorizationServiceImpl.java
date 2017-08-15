@@ -37,9 +37,13 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             authRequestValidator.validate(request);
             processResult = authorizationManager.processAuthorizationRequest(requestEntity);
             response = new AuthorizationResponse(processResult.getStatus());
-        } catch (ValidationException e) {
-            System.out.println("--------- Validation exception occured: " + e.getField() + " " + e.getComment());
+        } catch (ValidationException ve) {
             response = new AuthorizationResponse(AuthorizationRequestStatus.ERROR);
+            System.out.println("--------- Validation exception occured: " + ve.getField() + " " + ve.getComment());
+        } catch (Exception e) {
+            response = new AuthorizationResponse(AuthorizationRequestStatus.ERROR);
+            System.out.println("--------- General exception occured: ");
+            e.printStackTrace();
         } finally {
             authRequestRegistry.updateAuthorizationRequest(requestEntity, processResult);
         }

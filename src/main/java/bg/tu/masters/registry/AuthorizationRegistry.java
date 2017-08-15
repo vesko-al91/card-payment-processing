@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import bg.tu.masters.entity.AuthorizationEntity;
 import bg.tu.masters.entity.AuthorizationRequestEntity;
@@ -17,11 +18,24 @@ public class AuthorizationRegistry {
     @PersistenceContext(unitName="myOracle")
     private EntityManager em;
 
-    public AuthorizationEntity loadAuthorization(Long authorizationId) {
+    public AuthorizationEntity loadAuthorization(Long authReqId) {
         AuthorizationEntity authorizationEntity = null;
 
         try {
-            authorizationEntity = em.find(AuthorizationEntity.class, authorizationId);
+            Query query = em.createNamedQuery(AuthorizationEntity.FIND_AUTH_BY_REQ_ID);
+            query.setParameter("authReqId", authReqId);
+            authorizationEntity = (AuthorizationEntity) query.getSingleResult();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return authorizationEntity;
+    }
+
+    public AuthorizationEntity settleAuthorization(AuthorizationEntity authorizationEntity) {
+        try {
+            authorizationEntity.setStatus(AuthorizationStatus.SETTLED);
+            em.merge(authorizationEntity);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +54,7 @@ public class AuthorizationRegistry {
 
         try {
             em.persist(authorizationEntity);
+            em.flush();
         } catch(Exception e) {
             e.printStackTrace();
         }
